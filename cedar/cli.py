@@ -3,11 +3,12 @@ import functools
 import sys
 
 from . import CedarError, parse, __version__
-from .languages import go
+from .languages import elm, go
 
 
 _languages = {
-    "go": go.register
+    "elm": elm.register,
+    "go": go.register,
 }
 
 

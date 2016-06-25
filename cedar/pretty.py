@@ -51,8 +51,13 @@ class Layout(namedtuple("Layout", "children")):
         return Layout(self.children + other.children)
 
 
-line = Line
-text = partial(Text, doc=Nil())
+def line(doc):
+    return Line(doc)
+
+
+def text(value, doc=Nil()):
+    return Text(value, doc)
+
 blank = line(text(""))
 
 

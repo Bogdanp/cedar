@@ -262,12 +262,9 @@ class _Generator:
     @dispatch(ast.Type)  # noqa
     def generate_node(self, tipe):
         try:
-            if tipe.name == "DateTime":
-                self.imports.add("time")
-
             return text({
                 "Bool": "bool",
-                "DateTime": "time.Time",
+                "DateTime": "float64",
                 "Float": "float64",
                 "Int": "int",
                 "String": "string",
