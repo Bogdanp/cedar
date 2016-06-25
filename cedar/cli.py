@@ -2,7 +2,7 @@ import argparse
 import functools
 import sys
 
-from . import CedarError, parse
+from . import CedarError, parse, __version__
 from .languages import go
 
 
@@ -13,14 +13,16 @@ _languages = {
 
 def main():
     parser = argparse.ArgumentParser()
-    subparsers = parser.add_subparsers(
+    parser.add_argument("--version", action="version", version=__version__)
+
+    commands = parser.add_subparsers(
         title="commands",
         description="available Cedar commands")
 
-    generate = subparsers.add_parser(
+    generate = commands.add_parser(
         "generate",
         help="generate source code from a Cedar input file")
-    generate_subparsers = generate.add_subparsers(
+    languages = generate.add_subparsers(
         title="languages",
         description="languages Cedar can generate source code for")
 
@@ -45,7 +47,7 @@ def main():
     sorted_languages = sorted(_languages.keys())
     for language in sorted_languages:
         register = _languages[language]
-        subparser, handler = register(generate_subparsers)
+        subparser, handler = register(languages)
         subparser.add_argument("filename", help="the Cedar file to generate source code from")
         subparser.set_defaults(handle=decorate_language(handler))
 
