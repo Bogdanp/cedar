@@ -36,7 +36,7 @@ def main():
         def wrapper(arguments):
             with open(arguments.filename) as f:
                 try:
-                    module = parse(f.read(), filename=f)
+                    module = parse(f.read(), filename=arguments.filename)
                     return handler(arguments, module)
                 except CedarError as e:
                     return e.print_and_halt()
