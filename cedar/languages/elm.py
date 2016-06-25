@@ -289,9 +289,11 @@ class _Generator:
                     ])
                 ]),
                 text("in") + block([
-                    text("HB.post config__.endpoint") + block([
+                    text('HB.url config__.endpoint [("fn", "{}")]'.format(function.name)) + block([
+                        text("|> HB.post"),
                         text("|> config__.withAuth"),
                         text('|> HB.withHeader "Content-type" "application/json"'),
+                        text("|> HB.withJsonBody req"),
                         text("|> HB.withTimeout config__.timeout"),
                         text("|> HB.send (HB.jsonReader res) HB.stringReader")
                     ])
