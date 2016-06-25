@@ -6,8 +6,8 @@ from enum import Enum
 from .errors import ParseError
 
 TokenKind = Enum("TokenKind", (
-    "enum record function name cap_name pipe qmark comma colon lbrace rbrace "
-    "lbracket rbracket lparen rparen newline whitespace invalid eof"))
+    "enum union record function name cap_name qmark comma colon lparen rparen "
+    "lbrace rbrace lbracket rbracket newline whitespace invalid eof"))
 Token = namedtuple("Token", "kind value line column")
 Spec = namedtuple("Spec", "kind re")
 
@@ -51,20 +51,20 @@ def tokenize(file_name, file_contents):
 
 _spec = re.compile("|".join(r"(?P<{s.kind.name}>{s.re})".format(s=s) for s in (
     Spec(TokenKind.enum, r"enum"),
+    Spec(TokenKind.union, r"union"),
     Spec(TokenKind.record, r"record"),
     Spec(TokenKind.function, r"fn"),
     Spec(TokenKind.name, r"[a-z_][a-zA-Z0-9_]*"),
     Spec(TokenKind.cap_name, r"[A-Z][a-zA-Z0-9]*"),
-    Spec(TokenKind.pipe, r"\|"),
     Spec(TokenKind.qmark, r"\?"),
     Spec(TokenKind.comma, r","),
     Spec(TokenKind.colon, r":"),
+    Spec(TokenKind.lparen, r"\("),
+    Spec(TokenKind.rparen, r"\)"),
     Spec(TokenKind.lbrace, r"\{"),
     Spec(TokenKind.rbrace, r"\}"),
     Spec(TokenKind.lbracket, r"\["),
     Spec(TokenKind.rbracket, r"\]"),
-    Spec(TokenKind.lparen, r"\("),
-    Spec(TokenKind.rparen, r"\)"),
     Spec(TokenKind.whitespace, r" +"),
     Spec(TokenKind.newline, r"\n"),
     Spec(TokenKind.invalid, r"."),

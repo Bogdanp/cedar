@@ -1,8 +1,8 @@
 from collections import OrderedDict
 from multipledispatch import dispatch
 
-from .. import ast, pretty
-from ..pretty import IndentConfig, concat, text, line, blank, pretty_print
+from .. import ast
+from ..pretty import IndentConfig, blank, concat, text, line, block, pretty_print
 
 
 def handle(arguments, module):
@@ -74,15 +74,6 @@ def generate(module, *, package_name="server", server_name="Server"):
     return pretty_print(source, config)
 
 
-def block(children, tokens="{}"):
-    return concat(
-        text(" "),
-        text(tokens[0]),
-        pretty.block(children),
-        line(text(tokens[1]))
-    )
-
-
 def capitalize(s):
     return s[0].upper() + s[1:]
 
@@ -101,6 +92,7 @@ class _Generator:
         ])
 
         self.enum_docs = []
+        self.union_docs = []
         self.record_docs = []
         self.function_docs = []
 
@@ -117,6 +109,7 @@ class _Generator:
             ), tokens="()"),
 
             *self.enum_docs,
+            *self.union_docs,
             *self.record_docs,
             *self.server_docs,
             *self.function_docs
@@ -194,6 +187,13 @@ class _Generator:
             blank,
             line(text("var")),
             block((tag(node) for node in enum.tags), tokens="()"),
+        ))
+
+    @dispatch(ast.Union)  # noqa
+    def generate_decl(self, union):
+        self.union_docs.append(concat(
+            blank,
+            line(text("type {} interface{{}}".format(union.name)))
         ))
 
     @dispatch(ast.Record)  # noqa
@@ -286,9 +286,7 @@ class _Generator:
     @dispatch(ast.Dict)  # noqa
     def generate_node(self, tipe):
         return concat(
-            text("map["),
-            self.generate_node(tipe.keys_type),
-            text("]"),
+            text("map[string]"),
             self.generate_node(tipe.values_type)
         )
 

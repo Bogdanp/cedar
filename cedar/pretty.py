@@ -57,11 +57,20 @@ blank = line(text(""))
 
 
 def concat(*children):
-    return reduce(operator.add, children)
+    return reduce(operator.add, children, Layout([]))
 
 
-def block(children):
-    return Block([line(child) for child in children])
+def block(children, tokens="{}"):
+    block = Block([line(child) for child in children])
+    if tokens is None:
+        return block
+
+    return concat(
+        text(" "),
+        text(tokens[0]),
+        block,
+        line(text(tokens[1]))
+    )
 
 
 @dispatch(Layout, IndentConfig)

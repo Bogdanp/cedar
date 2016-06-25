@@ -73,15 +73,8 @@ def test_can_parse_modules():
 
 def test_can_parse_enums():
     table([
-        (
-            "enum A {}",
-            Enum("A", [])
-        ),
-
-        (
-            "enum A { B, C, D }",
-            Enum("A", [Tag("B"), Tag("C"), Tag("D")])
-        ),
+        ("enum A {}", Enum("A", [])),
+        ("enum A { B, C, D }", Enum("A", [Tag("B"), Tag("C"), Tag("D")])),
 
         (
             """
@@ -103,6 +96,24 @@ def test_can_parse_enums():
             """,
             Enum("A", [Tag("B"), Tag("C")])
         )
+    ])
+
+
+def test_can_parse_unions():
+    table([
+        ("union A {}", Union("A", [])),
+        ("union A { B, C }", Union("A", [Type("B"), Type("C")])),
+
+        (
+            """
+              union A {
+                B,
+                C?,
+                [D]
+              }
+            """,
+            Union("A", [Type("B"), Nullable(Type("C")), List(Type("D"))])
+        ),
     ])
 
 
@@ -160,11 +171,11 @@ def test_can_parse_functions():
         ),
 
         (
-            "fn findAllResources(kind ResourceKind) (User | Post | Comment)",
+            "fn findAllResources(kind ResourceKind) Resource",
             Function(
                 "findAllResources",
                 [Parameter("kind", Type("ResourceKind"))],
-                Union([Type("User"), Type("Post"), Type("Comment")])
+                Type("Resource")
             )
         ),
 

@@ -41,6 +41,7 @@ class _Parser(Typechecker):
     def parse_module(self):
         dispatch = {
             TokenKind.enum: self.parse_enum,
+            TokenKind.union: self.parse_union,
             TokenKind.record: self.parse_record,
             TokenKind.function: self.parse_function
         }
@@ -79,6 +80,23 @@ class _Parser(Typechecker):
 
     def parse_tag(self):
         return ast.Tag(self.consume(TokenKind.cap_name).value)
+
+    def parse_union(self):
+        self.consume(TokenKind.union)
+        name = token = self.consume(TokenKind.cap_name)
+        self.declare_type(token.value, token)
+        self.consume(TokenKind.lbrace)
+
+        types = self.separated_by(
+            kind=TokenKind.comma,
+            parser=self.parse_type,
+            until=TokenKind.rbrace
+        )
+        self.skip_newlines()
+        self.consume(TokenKind.rbrace)
+        self.skip_newlines()
+
+        return ast.Union(name.value, types)
 
     def parse_record(self):
         self.consume(TokenKind.record)
@@ -137,9 +155,6 @@ class _Parser(Typechecker):
         elif self.peek(TokenKind.lbrace):
             tipe = self.parse_dict()
 
-        elif self.peek(TokenKind.lparen):
-            tipe = self.parse_union()
-
         else:
             token = self.consume(TokenKind.cap_name, message="the name of a type")
             tipe = self.typecheck(ast.Type(token.value), token)
@@ -162,14 +177,6 @@ class _Parser(Typechecker):
         values_type = self.parse_type()
         self.consume(TokenKind.rbrace)
         return self.typecheck(ast.Dict(ast.Type(keys_type.value), values_type), token)
-
-    def parse_union(self):
-        self.consume(TokenKind.lparen)
-        types = [self.parse_type()]
-        while self.skip_many(TokenKind.pipe):
-            types.append(self.parse_type())
-        self.consume(TokenKind.rparen)
-        return ast.Union(types)
 
     def signal_parse_error(self, message, token):
         raise ParseError(message, self.file_name, self.file_contents, token.line, token.column)
