@@ -42,6 +42,6 @@ class Typechecker:
 
     @dispatch(ast.Dict, object)  # noqa
     def typecheck(self, node, token):
-        if node.keys_type.name not in self.builtin_types:
-            self.signal_type_error("dict keys must be {}".format(_builtins_p), token)
+        if node.keys_type.name != "String":
+            self.signal_type_error("dict keys must be Strings", token)
         return node
