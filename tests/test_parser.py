@@ -62,6 +62,11 @@ def test_enums_cannnot_have_many_dangling_commas():
     assert e.value.column == 13
 
 
+def test_unions_cannot_be_empty():
+    with pytest.raises(ParseError):
+        parse("union A {}")
+
+
 def test_can_parse_modules():
     table([
         (
@@ -101,18 +106,16 @@ def test_can_parse_enums():
 
 def test_can_parse_unions():
     table([
-        ("union A {}", Union("A", [])),
         ("union A { B, C }", Union("A", [Type("B"), Type("C")])),
 
         (
             """
               union A {
                 B,
-                C?,
-                [D]
+                C,
               }
             """,
-            Union("A", [Type("B"), Nullable(Type("C")), List(Type("D"))])
+            Union("A", [Type("B"), Type("C")])
         ),
     ])
 

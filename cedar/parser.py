@@ -87,9 +87,13 @@ class _Parser(Typechecker):
         self.declare_type(token.value, token)
         self.consume(TokenKind.lbrace)
 
-        types = self.separated_by(
+        self.skip_newlines()
+        types = [self.parse_type_tag()]
+        self.skip_one(TokenKind.comma)
+
+        types += self.separated_by(
             kind=TokenKind.comma,
-            parser=self.parse_type,
+            parser=self.parse_type_tag,
             until=TokenKind.rbrace
         )
         self.skip_newlines()
@@ -97,6 +101,10 @@ class _Parser(Typechecker):
         self.skip_newlines()
 
         return ast.Union(name.value, types)
+
+    def parse_type_tag(self):
+        token = self.consume(TokenKind.cap_name)
+        return self.typecheck(ast.Type(token.value), token)
 
     def parse_record(self):
         self.consume(TokenKind.record)
