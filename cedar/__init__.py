@@ -2,4 +2,4 @@
 from .errors import CedarError, ParseError
 from .parser import parse
 
-__version__ = "0.2.5"
+__version__ = "0.2.6"
