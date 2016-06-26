@@ -1,4 +1,4 @@
-# cedar
+# cedar [![Build Status](https://travis-ci.org/Bogdanp/cedar.svg?branch=master)](https://travis-ci.org/Bogdanp/cedar) [![Coverage Status](https://coveralls.io/repos/github/Bogdanp/cedar/badge.svg?branch=master)](https://coveralls.io/github/Bogdanp/cedar?branch=master)
 
 _This is alpha-level stuff._
 
