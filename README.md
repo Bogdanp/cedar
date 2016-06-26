@@ -61,3 +61,10 @@ are declared using the `t?` syntax.
 ### Records
 
 ### Functions
+
+#### Editor support
+
+* [cedar-mode][cedar-mode] for Emacs
+
+
+[cedar-mode]: https://github.com/Bogdanp/cedar-mode
