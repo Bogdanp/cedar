@@ -55,7 +55,7 @@ _spec = re.compile("|".join(r"(?P<{s.kind.name}>{s.re})".format(s=s) for s in (
     Spec(TokenKind.record, r"record"),
     Spec(TokenKind.function, r"fn"),
     Spec(TokenKind.name, r"[a-z_][a-zA-Z0-9_]*"),
-    Spec(TokenKind.cap_name, r"[A-Z][a-zA-Z0-9]*"),
+    Spec(TokenKind.cap_name, r"[A-Z][a-zA-Z0-9_]*"),
     Spec(TokenKind.qmark, r"\?"),
     Spec(TokenKind.comma, r","),
     Spec(TokenKind.colon, r":"),
