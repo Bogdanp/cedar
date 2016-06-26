@@ -42,11 +42,6 @@ def register(parent):
         default="Api.Client",
         help="the generated source file's fully-qualified module"
     )
-    parser.add_argument(
-        "--client-name",
-        default="Client",
-        help="the name of the generated Client type"
-    )
     return parser, handle
 
 
