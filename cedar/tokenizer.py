@@ -65,7 +65,7 @@ _spec = re.compile("|".join(r"(?P<{s.kind.name}>{s.re})".format(s=s) for s in (
     Spec(TokenKind.rbrace, r"\}"),
     Spec(TokenKind.lbracket, r"\["),
     Spec(TokenKind.rbracket, r"\]"),
-    Spec(TokenKind.whitespace, r" +"),
+    Spec(TokenKind.whitespace, r"( +|//.*)"),
     Spec(TokenKind.newline, r"\n"),
     Spec(TokenKind.invalid, r"."),
 )))

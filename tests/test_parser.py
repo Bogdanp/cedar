@@ -67,6 +67,38 @@ def test_unions_cannot_be_empty():
         parse("union A {}")
 
 
+def test_comments_are_ignored():
+    table([
+        (
+            """
+              // a comment
+
+              enum A {}
+
+              // another comment
+            """,
+            Module([Enum("A", [])])
+        ),
+
+        (
+            """
+              // an enum
+              enum A { B }
+
+              // a record
+              record C {
+                // a field
+                d Int
+              }
+            """,
+            Module([
+                Enum("A", [Tag("B")]),
+                Record("C", [Attribute("d", Type("Int"))])
+            ])
+        ),
+    ])
+
+
 def test_can_parse_modules():
     table([
         (

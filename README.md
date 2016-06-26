@@ -25,7 +25,7 @@ Cedar currently targets Elm (clients) and Go (servers) source code.
 
 ## The Cedar language
 
-A Cedar specification consists of zero or more toplevel declarations.
+A Cedar specification consists of one or more toplevel declarations.
 All top level declarations must be valid `enum`s, `union`s, `record`s
 or `fn`s.
 

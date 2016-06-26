@@ -208,8 +208,11 @@ class _Parser(Typechecker):
         return None
 
     def next(self):
-        self.token = token = next(self.tokens)
-        return token
+        try:
+            self.token = token = next(self.tokens)
+            return token
+        except StopIteration:
+            return self.token
 
     def skip_one(self, *kinds):
         if self.peek(*kinds):
