@@ -1,6 +1,11 @@
+import os
 import re
 
 from setuptools import find_packages, setup
+
+
+def rel(*xs):
+    return os.path.join(os.path.abspath(os.path.dirname(__file__)), *xs)
 
 
 def read_requirements(filename):
@@ -23,9 +28,9 @@ def read_version(filename):
         return re.search(r'^__version__ = "([^"]+)"$', contents, re.MULTILINE).group(1)
 
 
-version = read_version("cedar/__init__.py")
-install_requires = list(read_requirements("requirements.txt"))
-tests_require = list(read_requirements("requirements_dev.txt"))
+version = read_version(rel("cedar", "__init__.py"))
+install_requires = list(read_requirements(rel("requirements.txt")))
+tests_require = list(read_requirements(rel("requirements_dev.txt")))
 
 setup(
     name="cedar",
@@ -36,8 +41,6 @@ setup(
         }
     },
     packages=find_packages(),
-    package_data={"": "LICENSE"},
-    include_package_data=True,
     install_requires=install_requires,
     tests_require=tests_require,
     description="A web service definition format and source code generator.",
