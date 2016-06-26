@@ -23,6 +23,15 @@ Cedar currently targets Elm (clients) and Go (servers) source code.
 
 `cedar generate elm --help`
 
+Generated Elm clients depend on the following packages:
+
+* [elm-community/json-extra][json-extra]
+* [lukewestby/elm-http-builder][http-builder]
+
+
+[json-extra]: http://package.elm-lang.org/packages/elm-community/json-extra/1.0.0/
+[http-builder]: http://package.elm-lang.org/packages/lukewestby/elm-http-builder/2.0.0/
+
 ## The Cedar language
 
 A Cedar specification consists of one or more toplevel declarations.
