@@ -23,7 +23,7 @@ func init() {
 	TodosImpl.HandleDeleteTodo(deleteTodo)
 }
 
-func getTodos(req *http.Request, data GetTodosRequest) ([]Todo, error) {
+func getTodos(req *http.Request, data *GetTodosRequest) ([]Todo, error) {
 	mu.Lock()
 	i := 0
 	xs := make([]Todo, len(todos))
@@ -36,7 +36,7 @@ func getTodos(req *http.Request, data GetTodosRequest) ([]Todo, error) {
 	return xs, nil
 }
 
-func getTodo(req *http.Request, data GetTodoRequest) (*Todo, error) {
+func getTodo(req *http.Request, data *GetTodoRequest) (*Todo, error) {
 	mu.Lock()
 	todo, ok := todos[data.ID]
 	mu.Unlock()
@@ -48,7 +48,7 @@ func getTodo(req *http.Request, data GetTodoRequest) (*Todo, error) {
 	return &todo, nil
 }
 
-func addTodo(req *http.Request, data AddTodoRequest) (Todo, error) {
+func addTodo(req *http.Request, data *AddTodoRequest) (Todo, error) {
 	mu.Lock()
 	seq++
 	todo := Todo{seq, data.Deadline, data.Description, StatusTodo}
@@ -58,7 +58,7 @@ func addTodo(req *http.Request, data AddTodoRequest) (Todo, error) {
 	return todo, nil
 }
 
-func deleteTodo(req *http.Request, data DeleteTodoRequest) (Unit, error) {
+func deleteTodo(req *http.Request, data *DeleteTodoRequest) (Unit, error) {
 	mu.Lock()
 	delete(todos, data.ID)
 	mu.Unlock()

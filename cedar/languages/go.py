@@ -129,7 +129,7 @@ class _Generator:
                     text("var request {}".format(tipe)),
                     text("err = dec.Decode(&request)"),
                     text("if err == nil") + block([
-                        text("res, err = s.{}".format(fn)) + text("(req, request)")
+                        text("res, err = s.{}".format(fn)) + text("(req, &request)")
                     ])
                 ])
             ])
@@ -215,7 +215,7 @@ class _Generator:
         )
 
         function_type = concat(
-            text("func(*http.Request, {}) ".format(request_type)),
+            text("func(*http.Request, *{}) ".format(request_type)),
             text("("),
             self.generate_node(function.return_type),
             text(", error)")
