@@ -41,6 +41,7 @@ setup(
     install_requires=install_requires,
     tests_require=tests_require,
     description="A web service definition format and source code generator.",
+    long_description="See https://github.com/Bogdanp/cedar",
     author="Bogdan Popa",
     author_email="popa.bogdanp@gmail.com",
     url="https://github.com/Bogdanp/cedar",
