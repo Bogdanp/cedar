@@ -4,7 +4,7 @@ CLIENT="frontend/src/Api/Todos.elm"
 GO_SOURCES=$(shell find backend/src/ -type f -name "*.go" -print)
 ELM_SOURCES=$(shell find frontend/src/ -type f -name "*.elm" -print)
 
-.PHONY: build
+.PHONY: build serve
 
 serve: build
 	backend/bin/backend
