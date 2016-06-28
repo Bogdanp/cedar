@@ -270,7 +270,7 @@ class _Generator:
             line(text("{name} {params} = ".format(name=function.name, params=param_names))),
             block([
                 text("let") + block([
-                    text("req = ") + block([
+                    text("req__ = ") + block([
                         text("JE.object") + block([
                             text("[ ") + concat(*(
                                 self.generate_encoder("", *pair) for pair in enumerate(function.parameters))
@@ -279,7 +279,7 @@ class _Generator:
                         ])
                     ]),
 
-                    line(text("res = ")) + block([
+                    line(text("res__ = ")) + block([
                         self.generate_decoder(function.return_type)
                     ])
                 ]),
@@ -288,9 +288,9 @@ class _Generator:
                         text("|> HB.post"),
                         text("|> config__.withAuth"),
                         text('|> HB.withHeader "Content-type" "application/json"'),
-                        text("|> HB.withJsonBody req"),
+                        text("|> HB.withJsonBody req__"),
                         text("|> HB.withTimeout config__.timeout"),
-                        text("|> HB.send (HB.jsonReader res) HB.stringReader")
+                        text("|> HB.send (HB.jsonReader res__) HB.stringReader")
                     ])
                 ])
             ])
