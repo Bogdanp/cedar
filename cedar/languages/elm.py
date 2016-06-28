@@ -112,11 +112,11 @@ class _Generator:
         for i, export in enumerate(sorted(chain(self.enum_exports, self.union_exports))):
             doc = text(export + "(..)")
             if i != 0:
-                doc = line(text(", ")) + doc
+                doc = line(", ") + doc
             exports.append(doc)
 
         for export in sorted(chain(self.record_exports, self.function_exports)):
-            exports.append(line(text(", " + export)))
+            exports.append(line(", " + export))
 
         return concat(
             text("module {} exposing".format(self.module_name)) + block([
@@ -137,7 +137,7 @@ class _Generator:
         yield blank
 
         for (module, alias, funcs) in sorted(self.imports):
-            imp = line(text("import " + module))
+            imp = line("import " + module)
             if alias is not None:
                 imp += text(" as " + alias)
 
@@ -152,7 +152,7 @@ class _Generator:
     def client_docs(self):
         return [
             blank, blank,
-            line(text("type alias ClientConfig =")) + block([
+            line("type alias ClientConfig =") + block([
                 text("{ endpoint : String"),
                 text(", timeout : Time"),
                 text(", withAuth : HB.RequestBuilder -> HB.RequestBuilder "),
@@ -160,32 +160,32 @@ class _Generator:
             ]),
 
             blank, blank,
-            line(text("defaultConfig : String -> ClientConfig")),
-            line(text("defaultConfig endpoint =")) + block([
+            line("defaultConfig : String -> ClientConfig"),
+            line("defaultConfig endpoint =") + block([
                 text("ClientConfig endpoint (Time.second * 5) identity")
             ]),
 
             blank, blank,
-            line(text("decodeDate___ : Decoder Date")),
-            line(text("decodeDate___ = ") + block([
+            line("decodeDate___ : Decoder Date"),
+            line("decodeDate___ = ") + block([
                 text("JD.map Date.fromTime JD.float")
-            ])),
+            ]),
 
             blank, blank,
-            line(text("encodeDate___ : Date -> JE.Value")),
-            line(text("encodeDate___ = ") + block([
+            line("encodeDate___ : Date -> JE.Value"),
+            line("encodeDate___ = ") + block([
                 text("Date.toTime >> JE.float")
-            ])),
+            ]),
 
             blank, blank,
-            line(text("encodeDict___ : (a -> JE.Value) -> Dict String a -> JE.Value")),
-            line(text("encodeDict___ f = ")) + block([
+            line("encodeDict___ : (a -> JE.Value) -> Dict String a -> JE.Value"),
+            line("encodeDict___ f = ") + block([
                 text(r"Dict.toList >> List.map (\(k, v) -> (k, f v)) >> JE.object")
             ]),
 
             blank, blank,
-            line(text("encodeMaybe___ : (a -> JE.Value) -> Maybe a -> JE.Value")),
-            line(text("encodeMaybe___ f = ")) + block([
+            line("encodeMaybe___ : (a -> JE.Value) -> Maybe a -> JE.Value"),
+            line("encodeMaybe___ f = ") + block([
                 text("Maybe.map f >> Maybe.withDefault JE.null")
             ]),
         ]
@@ -202,7 +202,7 @@ class _Generator:
         self.enum_exports.add(enum.name)
         self.enum_docs.append(concat(
             blank, blank,
-            line(text("type {}".format(enum.name))),
+            line("type {}".format(enum.name)),
             block(tag(*pair) for pair in enumerate(enum.tags)),
 
             *self.generate_encoder(enum),
@@ -221,7 +221,7 @@ class _Generator:
         self.union_exports.add(union.name)
         self.union_docs.append(concat(
             blank, blank,
-            line(text("type {}".format(union.name))),
+            line("type {}".format(union.name)),
             block(tipe(*pair) for pair in enumerate(union.types)),
 
             *self.generate_encoder(union),
@@ -234,14 +234,14 @@ class _Generator:
         for i, attribute in enumerate(record.attributes):
             attr = text("{}: ".format(attribute.name)) + self.generate_node(attribute.type)
             if i != 0:
-                attr = line(text(", ")) + attr
+                attr = line(", ") + attr
 
             attributes.append(attr)
 
         self.record_exports.add(record.name)
         self.record_docs.append(concat(
             blank, blank,
-            line(text("type alias {} =".format(record.name))),
+            line("type alias {} =".format(record.name)),
             block([
                 text("{ ") + concat(*attributes),
                 text("}")
@@ -266,8 +266,8 @@ class _Generator:
         self.function_exports.add(function.name)
         self.function_docs.append(concat(
             blank, blank,
-            line(text("{name} : ClientConfig".format(name=function.name)) + param_types + return_type),
-            line(text("{name} {params} = ".format(name=function.name, params=param_names))),
+            line("{name} : ClientConfig".format(name=function.name)) + param_types + return_type,
+            line("{name} {params} = ".format(name=function.name, params=param_names)),
             block([
                 text("let") + block([
                     text("req__ = ") + block([
@@ -279,7 +279,7 @@ class _Generator:
                         ])
                     ]),
 
-                    line(text("res__ = ")) + block([
+                    line("res__ = ") + block([
                         self.generate_decoder(function.return_type)
                     ])
                 ]),
@@ -341,8 +341,8 @@ class _Generator:
         encoder_name = self.generate_encoder_name(enum)
         return [
             blank, blank,
-            line(text("{name} : {enum} -> JE.Value".format(name=encoder_name, enum=enum.name))),
-            line(text("{name} tag =".format(name=encoder_name))),
+            line("{name} : {enum} -> JE.Value".format(name=encoder_name, enum=enum.name)),
+            line("{name} tag =".format(name=encoder_name)),
             block([
                 text("case tag of") + block(
                     tag(node) for node in enum.tags
@@ -359,8 +359,8 @@ class _Generator:
         encoder_name = self.generate_encoder_name(union)
         return [
             blank, blank,
-            line(text("{name} : {union} -> JE.Value".format(name=encoder_name, union=union.name))),
-            line(text("{name} tag =".format(name=encoder_name))),
+            line("{name} : {union} -> JE.Value".format(name=encoder_name, union=union.name)),
+            line("{name} tag =".format(name=encoder_name)),
             block([
                 text("case tag of") + block(
                     tipe(node) for node in union.types
@@ -373,8 +373,8 @@ class _Generator:
         encoder_name = self.generate_encoder_name(record)
         return [
             blank, blank,
-            line(text("{name} : {record} -> JE.Value".format(name=encoder_name, record=record.name))),
-            line(text("{name} record =".format(name=encoder_name))),
+            line("{name} : {record} -> JE.Value".format(name=encoder_name, record=record.name)),
+            line("{name} record =".format(name=encoder_name)),
             block([
                 text("JE.object") + block([
                     text("[ ") + concat(*(
@@ -389,7 +389,7 @@ class _Generator:
     def generate_encoder(self, prefix, i, node):
         doc = text('("{}", '.format(node.name)) + self.generate_encoder(node.type)
         if i != 0:
-            doc = line(text(", ")) + doc
+            doc = line(", ") + doc
 
         return doc + text(" {prefix}{name})".format(
             prefix=prefix,
@@ -432,8 +432,8 @@ class _Generator:
         decoder_name = self.generate_decoder_name(enum)
         return [
             blank, blank,
-            line(text("{name} : Decoder {enum}".format(name=decoder_name, enum=enum.name))),
-            line(text("{name} =".format(name=decoder_name))),
+            line("{name} : Decoder {enum}".format(name=decoder_name, enum=enum.name)),
+            line("{name} =".format(name=decoder_name)),
             block([
                 text("let") + block([
                     text("dec s = ") + block([
@@ -454,14 +454,14 @@ class _Generator:
             name = self.union_tags[union.name][tipe.name]
             doc = text("JD.map {} ".format(name)) + self.generate_decoder(tipe)
             if i != 0:
-                return line(text(", ") + doc)
+                return line(", ") + doc
             return doc
 
         decoder_name = self.generate_decoder_name(union)
         return [
             blank, blank,
-            line(text("{name} : Decoder {union}".format(name=decoder_name, union=union.name))),
-            line(text("{name} =".format(name=decoder_name))),
+            line("{name} : Decoder {union}".format(name=decoder_name, union=union.name)),
+            line("{name} =".format(name=decoder_name)),
             block([
                 text("JD.oneOf") + block([
                     text("[ ") + concat(*(tipe(*pair) for pair in enumerate(union.types))),
@@ -479,8 +479,8 @@ class _Generator:
         decoder_name = self.generate_decoder_name(record)
         return [
             blank, blank,
-            line(text("{name} : Decoder {record}".format(name=decoder_name, record=record.name))),
-            line(text("{name} =".format(name=decoder_name))),
+            line("{name} : Decoder {record}".format(name=decoder_name, record=record.name)),
+            line("{name} =".format(name=decoder_name)),
             block([
                 text("JD.succeed " + record.name) + block(
                     attr(node) for node in record.attributes

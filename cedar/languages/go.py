@@ -104,7 +104,7 @@ class _Generator:
             text("package {}".format(self.package_name)),
 
             blank,
-            line(text("import")) + block((
+            line("import") + block((
                 text('"{}"'.format(imp)) for imp in sorted(self.imports)
             ), tokens="()"),
 
@@ -136,13 +136,13 @@ class _Generator:
 
         return [
             blank,
-            line(text("type {} struct".format(self.server_name))),
+            line("type {} struct".format(self.server_name)),
             block(text("{} ".format(n)) + t for n, (_, t) in self.functions.items()),
 
             blank,
-            line(text("func (s {sname}) ServeHTTP(rw http.ResponseWriter, req *http.Request)".format(
+            line("func (s {sname}) ServeHTTP(rw http.ResponseWriter, req *http.Request)".format(
                 sname=self.server_name)
-            )),
+            ),
             block([
                 text("var err error"),
                 text("var res interface{}"),
@@ -157,7 +157,7 @@ class _Generator:
                     ])
                 )),
 
-                line(text("if err != nil")) + block([
+                line("if err != nil") + block([
                     text("rw.WriteHeader(http.StatusBadRequest)"),
                     text("err = enc.Encode(err.Error())"),
                     text("if err != nil") + block([
@@ -183,9 +183,9 @@ class _Generator:
 
         self.enum_docs.append(concat(
             blank,
-            line(text("type {} string".format(enum.name))),
+            line("type {} string".format(enum.name)),
             blank,
-            line(text("var")),
+            line("var"),
             block((tag(node) for node in enum.tags), tokens="()"),
         ))
 
@@ -193,14 +193,14 @@ class _Generator:
     def generate_decl(self, union):
         self.union_docs.append(concat(
             blank,
-            line(text("type {} interface{{}}".format(union.name)))
+            line("type {} interface{{}}".format(union.name))
         ))
 
     @dispatch(ast.Record)  # noqa
     def generate_decl(self, record):
         self.record_docs.append(concat(
             blank,
-            line(text("type {} struct".format(record.name))),
+            line("type {} struct".format(record.name)),
             block(self.generate_node(node) for node in record.attributes),
         ))
 
@@ -210,7 +210,7 @@ class _Generator:
         request_type = "{}Request".format(name)
         request = concat(
             blank,
-            line(text("type {} struct".format(request_type))),
+            line("type {} struct".format(request_type)),
             block(self.generate_node(node) for node in function.parameters),
         )
 

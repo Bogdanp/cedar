@@ -70,8 +70,14 @@ class Layout(Doc, namedtuple("Layout", "children")):
         return Layout(self.children + other.children)
 
 
+@dispatch(Doc)
 def line(doc):
     return Line(doc)
+
+
+@dispatch(str)  # noqa
+def line(string):
+    return Line(text(string))
 
 
 def text(value, doc=Nil()):
