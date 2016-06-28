@@ -1,6 +1,6 @@
 import pytest
 
-from cedar import ParseError, ast, parse
+from cedar import ParseError, parse
 from cedar.ast import (
     Enum, Tag,
     Record, Attribute,
@@ -8,20 +8,7 @@ from cedar.ast import (
     Type, Union, Dict, List, Nullable
 )
 
-from functools import partial
-
-Module = partial(ast.Module, "[STRING]")
-
-
-def table(tests):
-    for string, expected_result in tests:
-        if isinstance(string, list):
-            return table([(s, expected_result) for s in string])
-
-        if not isinstance(expected_result, ast.Module):
-            expected_result = Module([expected_result])
-
-        assert parse(string, typecheck=False) == expected_result
+from .common import Module, table
 
 
 def test_parse_errors_can_halt_execution():

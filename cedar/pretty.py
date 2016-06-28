@@ -1,7 +1,7 @@
 import operator
 
 from collections import namedtuple
-from functools import partial, reduce
+from functools import reduce
 from multipledispatch import dispatch
 
 
@@ -17,36 +17,55 @@ class IndentConfig(namedtuple("IndentConfig", "offset indent_by indent_char")):
         return self.indent_char * self.offset
 
 
-class Text(namedtuple("Text", "value doc")):
-    def __add__(self, other):
-        return Text(self.value, self.doc + other)
+class Doc:
+    pass
 
 
-class Line(namedtuple("Line", "doc")):
-    def __add__(self, other):
-        return Line(self.doc + other)
-
-
-class Block(namedtuple("Block", "docs")):
-    def __add__(self, other):
-        return Layout([self, other])
-
-
-class Nil(namedtuple("Nil", "")):
+class Nil(Doc, namedtuple("Nil", "")):
     def __add__(self, other):
         return other
 
 
-class Layout(namedtuple("Layout", "children")):
+class Text(Doc, namedtuple("Text", "value doc")):
     @dispatch(Nil)
+    def __add__(self, _):
+        return self
+
+    @dispatch(Doc)  # noqa
     def __add__(self, other):
+        return Text(self.value, self.doc + other)
+
+
+class Line(Doc, namedtuple("Line", "doc")):
+    @dispatch(Nil)
+    def __add__(self, _):
+        return self
+
+    @dispatch(Doc)  # noqa
+    def __add__(self, other):
+        return Line(self.doc + other)
+
+
+class Block(Doc, namedtuple("Block", "docs")):
+    @dispatch(Nil)
+    def __add__(self, _):
+        return self
+
+    @dispatch(Doc)  # noqa
+    def __add__(self, other):
+        return Layout([self, other])
+
+
+class Layout(Doc, namedtuple("Layout", "children")):
+    @dispatch(Nil)
+    def __add__(self, _):
         return self
 
     @dispatch((Text, Line, Block))  # noqa
     def __add__(self, other):
         return Layout(self.children + [other])
 
-    @dispatch(object)  # noqa
+    @dispatch(Doc)  # noqa
     def __add__(self, other):
         return Layout(self.children + other.children)
 
