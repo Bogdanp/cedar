@@ -8,7 +8,7 @@ from cedar import cli
 from collections import namedtuple
 from functools import partial
 from glob import iglob
-from subprocess import Popen
+from subprocess import PIPE, STDOUT, Popen
 
 from . import common
 from .common import arguments
@@ -16,7 +16,7 @@ from .common import arguments
 rel = partial(common.rel, "fixtures", "codegen")
 
 
-class Config(namedtuple("Config", "dir endpoint targets commands cases")):
+class Config(namedtuple("Config", "dir endpoint targets commands entrypoint cases")):
     def test(self, capsys):
         self._build_targets(capsys)
         proc = self._run_commands()
@@ -37,14 +37,15 @@ class Config(namedtuple("Config", "dir endpoint targets commands cases")):
                 f.write(output)
 
     def _run_commands(self):
-        for i, command in enumerate(self.commands):
-            command = shlex.split(command)
-            proc = Popen(command, cwd=rel(self.dir))
-            if i < len(self.commands) - 1:
-                code = proc.wait()
-                assert code == 0
+        popen = partial(Popen, cwd=rel(self.dir))
+        for command in self.commands:
+            assert popen(shlex.split(command)).wait() == 0
 
-        return proc
+        proc = popen(shlex.split(self.entrypoint), stdout=PIPE, stderr=STDOUT)
+        while True:
+            line = proc.stdout.readline()
+            if b"listening" in line.lower():
+                return proc
 
     def _run_cases(self):
         for case in self.cases:

@@ -5,7 +5,7 @@ targets:
     out: echo.go/src/server/echo.go
 commands:
   - gb build all
-  - bin/echo
+entrypoint: bin/echo
 
 endpoint: http://localhost:9090/echo
 cases:
