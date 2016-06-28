@@ -9,5 +9,5 @@ before_install:
 install:
   - go get github.com/constabulary/gb/...
   - pip install -r requirements_dev.txt coveralls
-script: py.test
+script: py.test -sv
 after_success: coveralls
