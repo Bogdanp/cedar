@@ -2,10 +2,20 @@
 
 _This is alpha-level stuff._
 
-Cedar is a small web service declaration language.  You write your
-service spec using its declaration format and then you use that spec
-to generate client and server boilerplate for a number of programming
-languages.
+Cedar is a small web service declaration language.  You declare your
+service using this language and then use that declaration to generate
+client and server code for a number of programming languages.
+
+## Goals
+
+* A single transport (http) and serialization format (json).
+* Simple, consolidated tooling.  All functionality must live under
+  this repository and must be distributed under one package.
+* Aim to be an 85% solution.  Be the most simple thing that covers the
+  widest array of use cases.  Never add complexity for the sake of
+  covering fringe use cases.
+* Generated source code must be idiomatic to the generated language.
+* Generated source code must be human-readable.
 
 ## Installation
 
@@ -23,7 +33,7 @@ Cedar currently targets Elm (clients) and Go (servers) source code.
 
 `cedar generate elm --help`
 
-Generated Elm clients depend on the following packages:
+Elm clients depend on the following packages:
 
 * [elm-community/json-extra][json-extra]
 * [lukewestby/elm-http-builder][http-builder]
@@ -35,7 +45,7 @@ Generated Elm clients depend on the following packages:
 ## The Cedar language
 
 A Cedar specification consists of one or more toplevel declarations.
-All top level declarations must be valid `enum`s, `union`s, `record`s
+All toplevel declarations must be valid `enum`s, `union`s, `record`s
 or `fn`s.
 
 ### Example
@@ -65,11 +75,40 @@ are declared using the `t?` syntax.
 
 ### Enums
 
+``` cedar
+enum Status { Ready, Done, Failed }
+```
+
+Enums introduce new types (named after the enum) whose values are
+constrained to the tags defined in the enum.  The tags inside an enum
+are serialized as strings.  For example, a record attribute with the
+type `Status` can contain one of the following JSON values: `"Ready"`,
+`"Done"` and `"Failed"`.
+
 ### Unions
+
+``` cedar
+union Resource { Post, Comment }
+```
+
+Unions join multiple types under a single new type.
 
 ### Records
 
+``` cedar
+record Post {
+  id Int
+  title String
+  content String
+  publishedAt DateTime
+}
+```
+
 ### Functions
+
+``` cedar
+fn createPost(title String, content String, publishedAt DateTime?) Post
+```
 
 #### Editor support
 
