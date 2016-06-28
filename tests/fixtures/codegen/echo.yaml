@@ -1,0 +1,32 @@
+dir: echo.go
+targets:
+  - cmd: cedar generate go --package-name server --server-name Echo
+    in: echo.cedar
+    out: echo.go/src/server/echo.go
+commands:
+  - gb build all
+  - bin/echo
+
+endpoint: http://localhost:9090/echo
+cases:
+  - description: happy path
+    request:
+      fn: echo
+      data:
+        in: hello
+    response:
+      code: 200
+      data: hello
+  - description: bad input data
+    request:
+      fn: echo
+      data:
+        in: 42
+    response:
+      code: 400
+  - description: invalid function
+    request:
+      fn: idontexist
+      data:
+    response:
+      code: 400

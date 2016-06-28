@@ -1,7 +1,10 @@
 import os
+import sys
 
+from contextlib import contextmanager
 from cedar import ast, parse
 from functools import partial
+from unittest.mock import patch
 
 Module = partial(ast.Module, "[STRING]")
 
@@ -19,3 +22,9 @@ def table(tests, typecheck=False):
             expected_result = Module([expected_result])
 
         assert parse(string, typecheck=False) == expected_result
+
+
+@contextmanager
+def arguments(*args):
+    with patch.object(sys, "argv", list(args)):
+        yield

@@ -1,19 +1,10 @@
 import pytest
-import sys
 
-from contextlib import contextmanager
 from cedar.cli import main
-from unittest.mock import patch
 
-from .common import rel
+from .common import rel, arguments
 
 filename = rel("..", "examples", "todos", "todos.cedar")
-
-
-@contextmanager
-def arguments(*args):
-    with patch.object(sys, "argv", list(args)):
-        yield
 
 
 def test_commands_are_routed_correctly():

@@ -1,7 +1,11 @@
 language: python
 python:
   - "3.5"
+before_install:
+  - sudo apt-get update
+  - sudo apt-get install -y golang
 install:
+  - go get github.com/constabulary/gb/...
   - pip install -r requirements_dev.txt coveralls
 script: py.test
 after_success: coveralls

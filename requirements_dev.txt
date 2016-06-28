@@ -1,7 +1,8 @@
 -r requirements.txt
 
-flake8==2.6.0
 pytest==2.9.2
 pytest-cov==2.2.1
 pytest-pythonpath==0.7
 pytest-xdist==1.14
+pyyaml>=3.11,<4
+requests>=2.10,<3
