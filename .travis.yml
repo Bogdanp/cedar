@@ -6,6 +6,8 @@ before_install:
   - mkdir gocode
   - export GOPATH=$(pwd)/gocode
   - export PATH=$GOPATH/bin:$PATH
+  - nvm install node
+  - npm install -g elm
 install:
   - go get github.com/constabulary/gb/...
   - pip install -r requirements_dev.txt coveralls
