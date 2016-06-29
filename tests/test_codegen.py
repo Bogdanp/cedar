@@ -16,15 +16,16 @@ from .common import arguments
 rel = partial(common.rel, "fixtures", "codegen")
 
 
-class Config(namedtuple("Config", "root endpoint targets commands entrypoint cases")):
+class Config(namedtuple("Config", "root endpoint targets commands entrypoints cases")):
     def test(self, capsys):
         self.build_targets(capsys)
-        proc = self.run_commands()
+        procs = self.run_commands()
 
         try:
             self.run_cases()
         finally:
-            proc.terminate()
+            for proc in procs:
+                proc.terminate()
 
     def build_targets(self, capsys):
         for target in self.targets:
@@ -41,11 +42,16 @@ class Config(namedtuple("Config", "root endpoint targets commands entrypoint cas
         for command in self.commands:
             assert popen(shlex.split(command)).wait() == 0
 
-        proc = popen(shlex.split(self.entrypoint), stdout=PIPE, stderr=STDOUT)
-        while True:
-            line = proc.stdout.readline()
-            if b"listening" in line.lower():
-                return proc
+        procs = []
+        for entrypoint in self.entrypoints:
+            proc = popen(shlex.split(entrypoint), stdout=PIPE, stderr=STDOUT)
+            while True:
+                line = proc.stdout.readline().lower()
+                if b"listening" in line or b"ready" in line:
+                    procs.append(proc)
+                    break
+
+        return procs
 
     def run_cases(self):
         for case in self.cases:
@@ -53,19 +59,36 @@ class Config(namedtuple("Config", "root endpoint targets commands entrypoint cas
             if description is not None:
                 print("Running test case: {!r}".format(description))
 
-            request = case["request"]
-            expected = case["response"]
-            response = requests.post(
-                self.endpoint,
-                params={"fn": request["fn"]},
-                data=json.dumps(request["data"])
-            )
+            if "commands" in case:
+                self.run_frontend_case(case)
+            else:
+                self.run_backend_case(case)
 
-            if "code" in expected:
-                assert expected["code"] == response.status_code
+    def run_frontend_case(self, case):
+        popen = partial(Popen, cwd=rel(self.root))
+        for command in case["commands"]:
+            proc = popen(shlex.split(command), stdout=PIPE, stderr=STDOUT)
+            lines = proc.stdout.readlines()
+            if proc.wait() != 0:
+                print("Command {!r} failed:".format(command))
+                print()
+                print("".join(">" + " " * 4 + line.decode("utf-8") for line in lines))
+                assert False
 
-            if "data" in expected:
-                assert expected["data"] == response.json()
+    def run_backend_case(self, case):
+        request = case["request"]
+        expected = case["response"]
+        response = requests.post(
+            self.endpoint,
+            params={"fn": request["fn"]},
+            data=json.dumps(request["data"])
+        )
+
+        if "code" in expected:
+            assert expected["code"] == response.status_code
+
+        if "data" in expected:
+            assert expected["data"] == response.json()
 
 
 test_template = """

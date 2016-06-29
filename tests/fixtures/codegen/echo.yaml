@@ -3,9 +3,16 @@ targets:
   - command: cedar generate go --package-name server --server-name Echo
     in: echo.cedar
     out: echo.go/src/server/echo.go
+  - command: cedar generate elm --module-name Echo
+    in: echo.cedar
+    out: echo.go/frontend/Echo.elm
 commands:
   - gb build all
-entrypoint: bin/echo
+  - npm install -y
+  - elm package install -y
+  - elm make frontend/Main.elm --output=elm.js
+entrypoints:
+  - bin/echo
 
 endpoint: http://127.0.0.1:9090/echo
 cases:
@@ -13,7 +20,7 @@ cases:
     request:
       fn: echo
       data:
-        in: hello
+        message: hello
     response:
       code: 200
       data: hello
@@ -22,7 +29,7 @@ cases:
     request:
       fn: echo
       data:
-        in: 42
+        message: 42
     response:
       code: 400
 
@@ -32,3 +39,7 @@ cases:
       data:
     response:
       code: 400
+
+  - description: test frontend code
+    commands:
+      - node frontend.js

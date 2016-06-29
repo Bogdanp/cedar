@@ -1,2 +1,6 @@
 /bin
+/elm-stuff
+/elm.js
+/frontend/Echo.elm
+/node_modules
 /pkg

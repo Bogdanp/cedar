@@ -8,6 +8,6 @@ var EchoImpl Echo
 func init() {
 	EchoImpl = Echo{}
 	EchoImpl.HandleEcho(func(req *http.Request, data *EchoRequest) (string, error) {
-		return data.In, nil
+		return data.Message, nil
 	})
 }

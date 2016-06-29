@@ -1,1 +1,1 @@
-fn echo(in String) String
+fn echo(message String) String
