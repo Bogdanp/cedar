@@ -173,7 +173,7 @@ class _Generator:
             ])
         ]
 
-    @dispatch(ast.Enum)  # noqa
+    @dispatch(ast.Enum)
     def generate_decl(self, enum):
         def tag(tag):
             return text('{tipe}{tag} {tipe} = "{tag}"'.format(
@@ -189,14 +189,14 @@ class _Generator:
             block((tag(node) for node in enum.tags), tokens="()"),
         ))
 
-    @dispatch(ast.Union)  # noqa
+    @dispatch(ast.Union)
     def generate_decl(self, union):
         self.union_docs.append(concat(
             blank,
             line("type {} interface{{}}".format(union.name))
         ))
 
-    @dispatch(ast.Record)  # noqa
+    @dispatch(ast.Record)
     def generate_decl(self, record):
         self.record_docs.append(concat(
             blank,
@@ -204,7 +204,7 @@ class _Generator:
             block(self.generate_node(node) for node in record.attributes),
         ))
 
-    @dispatch(ast.Function)  # noqa
+    @dispatch(ast.Function)
     def generate_decl(self, function):
         name = function.name[0].upper() + function.name[1:]
         request_type = "{}Request".format(name)
@@ -246,7 +246,7 @@ class _Generator:
         self.record_docs.append(request)
         self.function_docs.append(declaration)
 
-    @dispatch((ast.Attribute, ast.Parameter))  # noqa
+    @dispatch((ast.Attribute, ast.Parameter))
     def generate_node(self, node):
         if node.name.lower() == "id":
             name = "ID"
@@ -259,7 +259,7 @@ class _Generator:
             text(' `json:"{}"`'.format(node.name))
         )
 
-    @dispatch(ast.Type)  # noqa
+    @dispatch(ast.Type)
     def generate_node(self, tipe):
         try:
             return text({
@@ -272,21 +272,21 @@ class _Generator:
         except KeyError:
             return text(tipe.name)
 
-    @dispatch(ast.Nullable)  # noqa
+    @dispatch(ast.Nullable)
     def generate_node(self, tipe):
         return text("*") + self.generate_node(tipe.type)
 
-    @dispatch(ast.List)  # noqa
+    @dispatch(ast.List)
     def generate_node(self, tipe):
         return text("[]") + self.generate_node(tipe.type)
 
-    @dispatch(ast.Dict)  # noqa
+    @dispatch(ast.Dict)
     def generate_node(self, tipe):
         return concat(
             text("map[string]"),
             self.generate_node(tipe.values_type)
         )
 
-    @dispatch(ast.Union)  # noqa
+    @dispatch(ast.Union)
     def generate_node(self, tipe):
         return text("interface{}")

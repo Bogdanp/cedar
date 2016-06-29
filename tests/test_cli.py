@@ -20,7 +20,7 @@ def test_generation_errors_exit():
 
 
 def test_no_args_prints_usage():
-    with arguments("cedar"):  # noqa
+    with arguments("cedar"):
         assert main() == 0
 
 

@@ -31,7 +31,7 @@ class Text(Doc, namedtuple("Text", "value doc")):
     def __add__(self, _):
         return self
 
-    @dispatch(Doc)  # noqa
+    @dispatch(Doc)
     def __add__(self, other):
         return Text(self.value, self.doc + other)
 
@@ -41,7 +41,7 @@ class Line(Doc, namedtuple("Line", "doc")):
     def __add__(self, _):
         return self
 
-    @dispatch(Doc)  # noqa
+    @dispatch(Doc)
     def __add__(self, other):
         return Line(self.doc + other)
 
@@ -51,7 +51,7 @@ class Block(Doc, namedtuple("Block", "docs")):
     def __add__(self, _):
         return self
 
-    @dispatch(Doc)  # noqa
+    @dispatch(Doc)
     def __add__(self, other):
         return Layout([self, other])
 
@@ -61,11 +61,11 @@ class Layout(Doc, namedtuple("Layout", "children")):
     def __add__(self, _):
         return self
 
-    @dispatch((Text, Line, Block))  # noqa
+    @dispatch((Text, Line, Block))
     def __add__(self, other):
         return Layout(self.children + [other])
 
-    @dispatch(Doc)  # noqa
+    @dispatch(Doc)
     def __add__(self, other):
         return Layout(self.children + other.children)
 
@@ -75,7 +75,7 @@ def line(doc):
     return Line(doc)
 
 
-@dispatch(str)  # noqa
+@dispatch(str)
 def line(string):
     return Line(text(string))
 
@@ -108,21 +108,21 @@ def pretty_print(layout, config):
     return "".join(pretty_print(child, config) for child in layout.children)
 
 
-@dispatch(Text, IndentConfig)  # noqa
+@dispatch(Text, IndentConfig)
 def pretty_print(text, config):
     return text.value + pretty_print(text.doc, config)
 
 
-@dispatch(Line, IndentConfig)  # noqa
+@dispatch(Line, IndentConfig)
 def pretty_print(line, config):
     return "\n" + config.render() + pretty_print(line.doc, config)
 
 
-@dispatch(Block, IndentConfig)  # noqa
+@dispatch(Block, IndentConfig)
 def pretty_print(block, config):
     return "".join(pretty_print(doc, config.indent()) for doc in block.docs)
 
 
-@dispatch(Nil, IndentConfig)  # noqa
+@dispatch(Nil, IndentConfig)
 def pretty_print(_, config):
     return ""

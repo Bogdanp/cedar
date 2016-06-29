@@ -34,13 +34,13 @@ class Typechecker:
         else:
             self.known_fns.add(name)
 
-    @dispatch(ast.Type, object)  # noqa
+    @dispatch(ast.Type, object)
     def typecheck(self, node, token):
         if node.name not in self.known_types:
             self.signal_type_error("unknown type {!r}".format(node.name), token)
         return node
 
-    @dispatch(ast.Dict, object)  # noqa
+    @dispatch(ast.Dict, object)
     def typecheck(self, node, token):
         if node.keys_type.name != "String":
             self.signal_type_error("dict keys must be Strings", token)

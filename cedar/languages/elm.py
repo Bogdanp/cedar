@@ -190,7 +190,7 @@ class _Generator:
             ]),
         ]
 
-    @dispatch(ast.Enum)  # noqa
+    @dispatch(ast.Enum)
     def generate_decl(self, enum):
         def tag(i, tag):
             self.enum_tags[enum.name][tag.name] = name = enum.name + tag.name
@@ -209,7 +209,7 @@ class _Generator:
             *self.generate_decoder(enum),
         ))
 
-    @dispatch(ast.Union)  # noqa
+    @dispatch(ast.Union)
     def generate_decl(self, union):
         def tipe(i, tipe):
             self.union_tags[union.name][tipe.name] = name = union.name + tipe.name
@@ -228,7 +228,7 @@ class _Generator:
             *self.generate_decoder(union),
         ))
 
-    @dispatch(ast.Record)  # noqa
+    @dispatch(ast.Record)
     def generate_decl(self, record):
         attributes = []
         for i, attribute in enumerate(record.attributes):
@@ -251,7 +251,7 @@ class _Generator:
             *self.generate_decoder(record),
         ))
 
-    @dispatch(ast.Function)  # noqa
+    @dispatch(ast.Function)
     def generate_decl(self, function):
         param_names = ("config__ " + " ".join(p.name for p in function.parameters)).strip()
         param_types = concat(
@@ -296,7 +296,7 @@ class _Generator:
             ])
         ))
 
-    @dispatch(ast.Type)  # noqa
+    @dispatch(ast.Type)
     def generate_node(self, tipe):
         try:
             if tipe.name == "DateTime":
@@ -308,15 +308,15 @@ class _Generator:
         except KeyError:
             return text(tipe.name)
 
-    @dispatch(ast.Nullable)  # noqa
+    @dispatch(ast.Nullable)
     def generate_node(self, tipe):
         return text("(Maybe ") + self.generate_node(tipe.type) + text(")")
 
-    @dispatch(ast.List)  # noqa
+    @dispatch(ast.List)
     def generate_node(self, tipe):
         return text("(List ") + self.generate_node(tipe.type) + text(")")
 
-    @dispatch(ast.Dict)  # noqa
+    @dispatch(ast.Dict)
     def generate_node(self, tipe):
         self.imports.add(("Dict", None, ("Dict",)))
         return concat(
@@ -332,7 +332,7 @@ class _Generator:
         self.decoders[node.name] = name = "decode" + node.name + "__"
         return name
 
-    @dispatch(ast.Enum)  # noqa
+    @dispatch(ast.Enum)
     def generate_encoder(self, enum):
         def tag(tag):
             name = self.enum_tags[enum.name][tag.name]
@@ -350,7 +350,7 @@ class _Generator:
             ])
         ]
 
-    @dispatch(ast.Union)  # noqa
+    @dispatch(ast.Union)
     def generate_encoder(self, union):
         def tipe(tipe):
             name = self.union_tags[union.name][tipe.name]
@@ -368,7 +368,7 @@ class _Generator:
             ])
         ]
 
-    @dispatch(ast.Record)  # noqa
+    @dispatch(ast.Record)
     def generate_encoder(self, record):
         encoder_name = self.generate_encoder_name(record)
         return [
@@ -385,7 +385,7 @@ class _Generator:
             ])
         ]
 
-    @dispatch(str, int, (ast.Attribute, ast.Parameter))  # noqa
+    @dispatch(str, int, (ast.Attribute, ast.Parameter))
     def generate_encoder(self, prefix, i, node):
         doc = text('("{}", '.format(node.name)) + self.generate_encoder(node.type)
         if i != 0:
@@ -396,7 +396,7 @@ class _Generator:
             name=node.name
         ))
 
-    @dispatch(ast.Type)  # noqa
+    @dispatch(ast.Type)
     def generate_encoder(self, tipe):
         try:
             return text({
@@ -410,19 +410,19 @@ class _Generator:
         except KeyError:
             return text(self.encoders[tipe.name])
 
-    @dispatch(ast.Nullable)  # noqa
+    @dispatch(ast.Nullable)
     def generate_encoder(self, tipe):
         return text("(encodeMaybe___ ") + self.generate_encoder(tipe.type) + text(")")
 
-    @dispatch(ast.List)  # noqa
+    @dispatch(ast.List)
     def generate_encoder(self, tipe):
         return text("(JE.list ") + self.generate_encoder(tipe.type) + text(")")
 
-    @dispatch(ast.Dict)  # noqa
+    @dispatch(ast.Dict)
     def generate_encoder(self, tipe):
         return text("(encodeDict___ ") + self.generate_encoder(tipe.values_type) + text(")")
 
-    @dispatch(ast.Enum)  # noqa
+    @dispatch(ast.Enum)
     def generate_decoder(self, enum):
         tags = []
         for tag in enum.tags:
@@ -448,7 +448,7 @@ class _Generator:
             ]),
         ]
 
-    @dispatch(ast.Union)  # noqa
+    @dispatch(ast.Union)
     def generate_decoder(self, union):
         def tipe(i, tipe):
             name = self.union_tags[union.name][tipe.name]
@@ -470,7 +470,7 @@ class _Generator:
             ]),
         ]
 
-    @dispatch(ast.Record)  # noqa
+    @dispatch(ast.Record)
     def generate_decoder(self, record):
         def attr(attr):
             decoder = self.generate_decoder(attr.type)
@@ -488,7 +488,7 @@ class _Generator:
             ]),
         ]
 
-    @dispatch(ast.Type)  # noqa
+    @dispatch(ast.Type)
     def generate_decoder(self, tipe):
         try:
             return text({
@@ -501,14 +501,14 @@ class _Generator:
         except KeyError:
             return text(self.decoders[tipe.name])
 
-    @dispatch(ast.Nullable)  # noqa
+    @dispatch(ast.Nullable)
     def generate_decoder(self, tipe):
         return text("(JD.maybe ") + self.generate_decoder(tipe.type) + text(")")
 
-    @dispatch(ast.List)  # noqa
+    @dispatch(ast.List)
     def generate_decoder(self, tipe):
         return text("(JD.list ") + self.generate_decoder(tipe.type) + text(")")
 
-    @dispatch(ast.Dict)  # noqa
+    @dispatch(ast.Dict)
     def generate_decoder(self, tipe):
         return text("(JD.dict ") + self.generate_decoder(tipe.values_type) + text(")")

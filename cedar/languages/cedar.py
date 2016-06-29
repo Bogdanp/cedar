@@ -45,21 +45,21 @@ def _format(module):
     return concat(*(_format(decl) for decl in module.declarations))
 
 
-@dispatch(ast.Enum)  # noqa
+@dispatch(ast.Enum)
 def _format(enum):
     return line("enum ") + text(enum.name) + block(
         text(tag.name) + text(",") for tag in enum.tags
     ) + blank
 
 
-@dispatch(ast.Union)  # noqa
+@dispatch(ast.Union)
 def _format(union):
     return line("union ") + text(union.name) + block(
         text(tipe.name) + text(",") for tipe in union.types
     ) + blank
 
 
-@dispatch(ast.Record)  # noqa
+@dispatch(ast.Record)
 def _format(record):
     def attr(attr):
         return concat(
@@ -73,7 +73,7 @@ def _format(record):
     ) + blank
 
 
-@dispatch(ast.Function)  # noqa
+@dispatch(ast.Function)
 def _format(function):
     def param(i, param):
         doc = concat(
@@ -93,21 +93,21 @@ def _format(function):
     )
 
 
-@dispatch(ast.Type)  # noqa
+@dispatch(ast.Type)
 def _format(tipe):
     return text(tipe.name)
 
 
-@dispatch(ast.List)  # noqa
+@dispatch(ast.List)
 def _format(node):
     return text("[") + _format(node.type) + text("]")
 
 
-@dispatch(ast.Nullable)  # noqa
+@dispatch(ast.Nullable)
 def _format(node):
     return _format(node.type) + text("?")
 
 
-@dispatch(ast.Dict)  # noqa
+@dispatch(ast.Dict)
 def _format(node):
     return text("{String: ") + _format(node.type) + text("}")
