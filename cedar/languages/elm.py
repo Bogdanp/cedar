@@ -81,6 +81,7 @@ class _Generator:
         self.encoders = {}
 
         self.imports = set([
+            ("Date", None, ("Date",)),
             ("Dict", None, ("Dict",)),
             ("HttpBuilder", "HB", None),
             ("Json.Decode", "JD", ("Decoder", "(:=)")),
@@ -115,8 +116,11 @@ class _Generator:
                 doc = line(", ") + doc
             exports.append(doc)
 
-        for export in sorted(chain(self.record_exports, self.function_exports)):
-            exports.append(line(", " + export))
+        for i, export in enumerate(sorted(chain(self.record_exports, self.function_exports))):
+            doc = text(export)
+            if i != 0:
+                doc = line(", ") + doc
+            exports.append(doc)
 
         return concat(
             text("module {} exposing".format(self.module_name)) + block([
@@ -299,9 +303,6 @@ class _Generator:
     @dispatch(ast.Type)
     def generate_node(self, tipe):
         try:
-            if tipe.name == "DateTime":
-                self.imports.add(("Date", None, ("Date",)))
-
             return text({
                 "DateTime": "Date",
             }[tipe.name])
