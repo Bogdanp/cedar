@@ -29,14 +29,21 @@ Cedar currently targets Elm (clients) and Go (servers) source code.
 
 `cedar generate go --help`
 
+#### Requirements
+
+Generated Go code has no external dependencies, but it does require at
+least Go version 1.6.
+
 ### Elm
 
 `cedar generate elm --help`
 
-Elm clients depend on the following packages:
+#### Requirements
 
-* [elm-community/json-extra][json-extra]
-* [lukewestby/elm-http-builder][http-builder]
+Generated Elm code currently requires Elm 0.17 and the following packages:
+
+* [elm-community/json-extra][json-extra] 1.x
+* [lukewestby/elm-http-builder][http-builder] 2.x
 
 
 [json-extra]: http://package.elm-lang.org/packages/elm-community/json-extra/1.0.0/
