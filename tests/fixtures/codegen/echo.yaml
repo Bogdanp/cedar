@@ -1,11 +1,12 @@
-root: echo.go
 targets:
   - command: cedar generate go --package-name server --server-name Echo
     in: echo.cedar
-    out: echo.go/src/server/echo.go
+    out: echo/src/server/echo.go
   - command: cedar generate elm --module-name Echo
     in: echo.cedar
-    out: echo.go/frontend/Echo.elm
+    out: echo/frontend/Echo.elm
+
+command_root: echo
 commands:
   - gb build all
   - npm install -y

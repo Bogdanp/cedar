@@ -16,7 +16,7 @@ from .common import arguments
 rel = partial(common.rel, "fixtures", "codegen")
 
 
-class Config(namedtuple("Config", "root endpoint targets commands entrypoints cases")):
+class Config(namedtuple("Config", "targets command_root commands entrypoints endpoint cases")):
     def test(self, capsys):
         self.build_targets(capsys)
         procs = self.run_commands()
@@ -38,7 +38,7 @@ class Config(namedtuple("Config", "root endpoint targets commands entrypoints ca
                 f.write(output)
 
     def run_commands(self):
-        popen = partial(Popen, cwd=rel(self.root))
+        popen = partial(Popen, cwd=rel(self.command_root))
         for command in self.commands:
             assert popen(shlex.split(command)).wait() == 0
 
@@ -65,7 +65,7 @@ class Config(namedtuple("Config", "root endpoint targets commands entrypoints ca
                 self.run_backend_case(case)
 
     def run_frontend_case(self, case):
-        popen = partial(Popen, cwd=rel(self.root))
+        popen = partial(Popen, cwd=rel(self.command_root))
         for command in case["commands"]:
             proc = popen(shlex.split(command), stdout=PIPE, stderr=STDOUT)
             lines = proc.stdout.readlines()
