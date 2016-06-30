@@ -109,14 +109,14 @@ class _Generator:
         for decl in self.module.declarations:
             self.generate_decl(decl)
 
-        exports = []
+        i, exports = 0, []
         for i, export in enumerate(sorted(chain(self.enum_exports, self.union_exports))):
             doc = text(export + "(..)")
             if i != 0:
                 doc = line(", ") + doc
             exports.append(doc)
 
-        for i, export in enumerate(sorted(chain(self.record_exports, self.function_exports))):
+        for i, export in enumerate(sorted(chain(self.record_exports, self.function_exports)), i):
             doc = text(export)
             if i != 0:
                 doc = line(", ") + doc
