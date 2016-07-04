@@ -264,10 +264,10 @@ class _Generator:
         try:
             return text({
                 "Bool": "bool",
-                "DateTime": "float64",
                 "Float": "float64",
                 "Int": "int",
                 "String": "string",
+                "Timestamp": "float64",
             }[tipe.name])
         except KeyError:
             return text(tipe.name)

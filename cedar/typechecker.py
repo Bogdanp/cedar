@@ -4,7 +4,7 @@ from . import ast
 from .errors import TypeError
 
 
-_builtins = ["Bool", "DateTime", "Int", "Float", "String"]
+_builtins = ["Bool", "Int", "Float", "String", "Timestamp"]
 _builtins_p = " or ".join(_builtins)
 
 

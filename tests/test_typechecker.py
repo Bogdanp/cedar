@@ -16,7 +16,7 @@ def test_builtins_are_accepted():
             """
               record A {
                 a Bool
-                b DateTime
+                b Timestamp
                 c Int
                 d Float
                 e String
@@ -24,7 +24,7 @@ def test_builtins_are_accepted():
             """,
             Record("A", [
                 Attribute("a", Type("Bool")),
-                Attribute("b", Type("DateTime")),
+                Attribute("b", Type("Timestamp")),
                 Attribute("c", Type("Int")),
                 Attribute("d", Type("Float")),
                 Attribute("e", Type("String")),

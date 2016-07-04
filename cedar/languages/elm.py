@@ -306,7 +306,7 @@ class _Generator:
     def generate_node(self, tipe):
         try:
             return text({
-                "DateTime": "Date",
+                "Timestamp": "Date",
             }[tipe.name])
         except KeyError:
             return text(tipe.name)
@@ -403,12 +403,11 @@ class _Generator:
     def generate_encoder(self, tipe):
         try:
             return text({
-                "DateTime": "encodeDate___",
-
                 "Bool": "JE.bool",
                 "Int": "JE.int",
                 "Float": "JE.float",
-                "String": "JE.string"
+                "String": "JE.string",
+                "Timestamp": "encodeDate___",
             }[tipe.name])
         except KeyError:
             return text(self.encoders[tipe.name])
@@ -496,10 +495,10 @@ class _Generator:
         try:
             return text({
                 "Bool": "JD.bool",
-                "DateTime": "decodeDate___",
                 "Int": "JD.int",
                 "Float": "JD.float",
-                "String": "JD.string"
+                "String": "JD.string",
+                "Timestamp": "decodeDate___",
             }[tipe.name])
         except KeyError:
             return text(self.decoders[tipe.name])

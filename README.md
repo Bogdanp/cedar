@@ -73,8 +73,8 @@ fn deleteUser(id Int) Bool
 
 ### Types
 
-There are 5 builtin types: `Bool`, `DateTime`, `Int`, `Float` and
-`String`.
+There are 5 builtin types: `Bool`, `Int`, `Float`, `String` and
+`Timestamp`.
 
 List types are declared using the `[t]` syntax (eg. `[String]`), dict
 types are declared using the `{String: t}` syntax, and nullable types
@@ -107,14 +107,14 @@ record Post {
   id Int
   title String
   content String
-  publishedAt DateTime
+  publishedAt Timestamp
 }
 ```
 
 ### Functions
 
 ``` cedar
-fn createPost(title String, content String, publishedAt DateTime?) Post
+fn createPost(title String, content String, publishedAt Timestamp?) Post
 ```
 
 #### Editor support
