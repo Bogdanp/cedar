@@ -1,4 +1,4 @@
-# cedar [![PyPI version](https://badge.fury.io/py/cedar.svg)](https://badge.fury.io/py/cedar) [![Build Status](https://travis-ci.org/Bogdanp/cedar.svg?branch=master)](https://travis-ci.org/Bogdanp/cedar) [![Coverage Status](https://coveralls.io/repos/github/Bogdanp/cedar/badge.svg?branch=master)](https://coveralls.io/github/Bogdanp/cedar?branch=master)
+# cedar [![PyPI version](https://badge.fury.io/py/cedar.svg)](https://badge.fury.io/py/cedar) [![Build Status](https://travis-ci.org/Bogdanp/cedar.svg?branch=master)](https://travis-ci.org/Bogdanp/cedar) [![Coverage Status](https://coveralls.io/repos/github/Bogdanp/cedar/badge.svg?branch=master)](https://coveralls.io/github/Bogdanp/cedar?branch=master) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/0d53cc46d1d5497b8652ab4acedf8b88)](https://www.codacy.com/app/bogdan/cedar?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Bogdanp/cedar&amp;utm_campaign=Badge_Grade)
 
 _This is alpha-level stuff._
 
