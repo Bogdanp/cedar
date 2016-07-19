@@ -509,7 +509,7 @@ class _Generator:
 
     @dispatch(ast.List)
     def generate_decoder(self, tipe):
-        return text("(JD.list ") + self.generate_decoder(tipe.type) + text(")")
+        return text("JD.oneOf [(JD.list ") + self.generate_decoder(tipe.type) + text("), JD.succeed []]")
 
     @dispatch(ast.Dict)
     def generate_decoder(self, tipe):
