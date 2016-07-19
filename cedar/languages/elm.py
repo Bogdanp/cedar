@@ -418,7 +418,7 @@ class _Generator:
 
     @dispatch(ast.List)
     def generate_encoder(self, tipe):
-        return text("(JE.list ") + self.generate_encoder(tipe.type) + text(")")
+        return text("(JE.list << List.map ") + self.generate_encoder(tipe.type) + text(")")
 
     @dispatch(ast.Dict)
     def generate_encoder(self, tipe):
