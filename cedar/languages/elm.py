@@ -174,13 +174,13 @@ class _Generator:
             blank, blank,
             line("decodeDate___ : Decoder Date"),
             line("decodeDate___ = ") + block([
-                text("JD.map Date.fromTime JD.float")
+                text("JD.map (Date.fromTime << (*) 1000) JD.float")
             ]),
 
             blank, blank,
             line("encodeDate___ : Date -> JE.Value"),
             line("encodeDate___ = ") + block([
-                text("Date.toTime >> JE.float")
+                text("Date.toTime >> flip (/) 1000 >> JE.float")
             ]),
 
             blank, blank,
